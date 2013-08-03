@@ -64,7 +64,7 @@
     
     //NSString *tmpTitleString =@ "Delete all historic data?";
     if ([alertView.title isEqualToString: @"Delete all Google Places data?"])
-    {
+    { 
         if (buttonIndex == 0)
         {
             NSLog(@"Cancelling: buttonIndex: %i", buttonIndex);
