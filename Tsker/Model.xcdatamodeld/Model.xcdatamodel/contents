@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3381.3" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="GeoFence" representedClassName="GeoFence" syncable="YES">
+        <attribute name="action" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="radius" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="targetIP" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="GooglePlaceResults" representedClassName="GooglePlaceResults" syncable="YES">
+        <attribute name="locationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="locationLat" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationLong" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationName" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ScratchFence" representedClassName="ScratchFence" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="radius" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="Settings" representedClassName="Settings" syncable="YES">
+        <attribute name="fromEmail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="geoFenceMonitoring" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="mACforWolIp" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sigChangeFnBool" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="smtpPasswd" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="smtpServer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toEmail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wolIP" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="SignificantChange" representedClassName="SignificantChange" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="descripString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="GeoFence" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="GooglePlaceResults" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ScratchFence" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Settings" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="SignificantChange" positionX="0" positionY="0" width="0" height="0"/>
+    </elements>
+</model>
