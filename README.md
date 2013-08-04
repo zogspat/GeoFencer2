@@ -18,4 +18,4 @@ While both functional and stable, this app is intended as a test platform. As a 
 
 The app uses some functionality which does not meet Apples guidelines for store submission - specifically the use of some private APIs for the WoL implementation and the sending of emails in the background.
 
-I am distributing this source under the MIT licence, warranty free. I would be interested in feedback: mailto:appsupport@the-plot.com . Furter information will be available on my blog: http://www.the-plot.com/blog/
+I am distributing this source under the MIT licence, warranty free. I would be interested in feedback: appsupport@the-plot.com. Furter information will be available on my blog: http://www.the-plot.com/blog/
