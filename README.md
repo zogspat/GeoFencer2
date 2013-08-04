@@ -11,6 +11,7 @@ The app runs in the background, using registration for location updates, and tri
 The project requires the installation of MailCore. There are are detailed instructions on the github site: https://github.com/MailCore/mailcore . Suggestion: download the project using the following commands:
 
 git clone https://github.com/mronge/MailCore.git
+
 git submodule update --init
 
 While both functional and stable, this app is intended as a test platform. As a consequence, it lacks some refinements [especially for input validation in user settings] that a more complete app would implement. Some additional features not currently implemented are discussed in constants.h, which should be set with appropriate values before building.
