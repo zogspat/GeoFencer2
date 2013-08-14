@@ -46,20 +46,51 @@
     if ([oldNotifications count] > 0)
         [app cancelAllLocalNotifications];
     // toggle this off and on to log to phone vs console:
-    //[self redirectConsoleLogToDocumentFolder];
+    [self redirectConsoleLogToDocumentFolder];
     managedObjectContext = [[DatabaseHelper sharedInstance] managedObjectContext];
     
     // http://stackoverflow.com/questions/10977679/recieving-location-updates-after-app-is-terminated
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    // not convinced based on link above so... 
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsAnnotationKey])
     {
-        NSLog(@"didFinishLaunchingWithOptions restart!");
+        NSLog(@"UIApplicationLaunchOptionsAnnotationKey didFinishLaunchingWithOptions restart!");
         locationManager = [[CLLocationManager alloc] init];
         [locationManager setDelegate:self];
         [CLLocationManager regionMonitoringAvailable];
         //[CLLocationManager regionMonitoringEnabled];
         [locationManager startMonitoringSignificantLocationChanges];
+        UILocalNotification *altRestartNotify = [[UILocalNotification alloc] init];
+        NSString *bodyString = [NSString stringWithFormat:@"UIApplicationLaunchOptionsAnnotationKey: I died but I'm back!"];
+        altRestartNotify.alertBody = bodyString;
+        altRestartNotify.timeZone = [NSTimeZone defaultTimeZone];
+        altRestartNotify.fireDate = [NSDate date];
+        //NSUInteger nextBadgeNumber = [[[UIApplication sharedApplication] scheduledLocalNotifications] count] + 1;
+        //localNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
+        [app scheduleLocalNotification:altRestartNotify];
+
+    }
+    //... 06/08: adding this:
+    if ([launchOptions objectForKey:UIApplicationLaunchOptionsLocationKey])
+    {
+        locationManager = [[CLLocationManager alloc] init];
+        [locationManager setDelegate:self];
+        [CLLocationManager regionMonitoringAvailable];
+        //[CLLocationManager regionMonitoringEnabled];
+        [locationManager startMonitoringSignificantLocationChanges];
+        /// and:
+        NSLog(@"UIApplicationLaunchOptionsLocationKey didFinishLaunchingWithOptions restart!");
+        // dying here with NSInvalidArgumentException. Possibly because re-using the same variable,
+        // localNotification, which is being set with multiple vals:
+        UILocalNotification *restartNotify = [[UILocalNotification alloc] init];
+        NSString *bodyString = [NSString stringWithFormat:@"UIApplicationLaunchOptionsLocationKey: I died but I'm back!"];
+        restartNotify.alertBody = bodyString;
+        restartNotify.timeZone = [NSTimeZone defaultTimeZone];
+        restartNotify.fireDate = [NSDate date];
+        //NSUInteger nextBadgeNumber = [[[UIApplication sharedApplication] scheduledLocalNotifications] count] + 1;
+        //localNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
+        [app scheduleLocalNotification:restartNotify];
     }
     if (regionActionMapping == nil)
     {
@@ -122,7 +153,7 @@
         NSLog(@"locationManager: didUpdateToLocation");
         //NSDate *alertTime = [[NSDate date] dateByAddingTimeInterval:10];
         UIApplication* app = [UIApplication sharedApplication];
-        localNotification = [[UILocalNotification alloc] init];
+        UILocalNotification *changeNotification = [[UILocalNotification alloc] init];
         //NSString *locationInfo = [newLocation description];
         // not using this for the notification - yet....
         if (oldLocation)
@@ -149,12 +180,12 @@
             [changeToAdd setDescripString:@"{SC}Significant Change"];
             [managedObjectContext save:nil];
             NSString *bodyString = [NSString stringWithFormat:@"Significant change: %f, %f", lat, lng];
-            localNotification.alertBody = bodyString;
-            localNotification.timeZone = [NSTimeZone defaultTimeZone];
-            localNotification.fireDate = [NSDate date];
+            changeNotification.alertBody = bodyString;
+            changeNotification.timeZone = [NSTimeZone defaultTimeZone];
+            changeNotification.fireDate = [NSDate date];
             //NSUInteger nextBadgeNumber = [[[UIApplication sharedApplication] scheduledLocalNotifications] count] + 1;
             //localNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
-            [app scheduleLocalNotification:localNotification];
+            [app scheduleLocalNotification:changeNotification];
         }
     }
 }
@@ -165,7 +196,7 @@
     [self prepSettingsData];
     [self prepFenceActionLookup];
     NSString *requiredAction = [regionActionMapping objectForKey:region.identifier];
-    NSLog(@"****---->>>> didEnterRegion: action is %@", requiredAction);
+    NSLog(@"****---->>>> didEnterRegion: action is %@ ", requiredAction);
     NSLog(@"Based on a region identifier of %@", region.identifier);
     NSLog(@"regionActionMapping has %i items", [regionActionMapping count]);
 
@@ -180,7 +211,6 @@
         [changeToAdd setDescripString:@"{EnR}Entered Region"];
         [managedObjectContext save:nil];
     }
-
     NSString *regionID =@ "Entering ";
     regionID = [regionID stringByAppendingString:region.identifier];
     if ([requiredAction isEqualToString:@"Local Notification"])
@@ -188,14 +218,14 @@
         NSLog(@"didEnterRegion: action Local Notification: locationManager  didEnterRegion: %@", region.description);
         //NSDate *alertTime = [[NSDate date] dateByAddingTimeInterval:10];
         UIApplication* app = [UIApplication sharedApplication];
-        localNotification = [[UILocalNotification alloc] init];
-        localNotification.alertBody = regionID;
-        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-        localNotification.fireDate = [NSDate date];
-        localNotification.soundName = @"alarmsound.caf";
+        UILocalNotification *enterNotification = [[UILocalNotification alloc] init];
+        enterNotification.alertBody = regionID;
+        enterNotification.timeZone = [NSTimeZone defaultTimeZone];
+        enterNotification.fireDate = [NSDate date];
+        enterNotification.soundName = @"alarmsound.caf";
         //NSUInteger nextBadgeNumber = [[[UIApplication sharedApplication] scheduledLocalNotifications] count] + 1;
-        localNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
-        [app scheduleLocalNotification:localNotification];
+        enterNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
+        [app scheduleLocalNotification:enterNotification];
     }
     else if ([requiredAction isEqualToString:@"Email"])
     {
@@ -236,15 +266,16 @@
         NSString *regionID =@ "Leaving ";
         regionID = [regionID stringByAppendingString:region.identifier];
         NSLog(@"locationManager didExitRegion: %@", regionID);
-        localNotification = [[UILocalNotification alloc] init];
-        localNotification.alertBody = regionID;
-        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-        localNotification.fireDate = [NSDate date];
-        localNotification.soundName = @"alarmsound.caf";
-        localNotification.alertAction =@"OK";
+        
+        UILocalNotification *exitNotification = [[UILocalNotification alloc] init];
+        exitNotification.alertBody = regionID;
+        exitNotification.timeZone = [NSTimeZone defaultTimeZone];
+        exitNotification.fireDate = [NSDate date];
+        exitNotification.soundName = @"alarmsound.caf";
+        exitNotification.alertAction =@"OK";
         //NSUInteger nextBadgeNumber = [[[UIApplication sharedApplication] scheduledLocalNotifications] count] + 1;
-        localNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
-        [app scheduleLocalNotification:localNotification];
+        exitNotification.applicationIconBadgeNumber++; // = nextBadgeNumber;
+        [app scheduleLocalNotification:exitNotification];
     }
 }
 
@@ -581,12 +612,12 @@
     // This is temporary. This gets called on a separate thread, so should return the notification a few seconds after
     // the initial significant change popup:
     NSString *bodyString = [NSString stringWithFormat:@"Google just returned %i results", googleHitCount];
-    localNotification = [[UILocalNotification alloc] init];
-    localNotification.alertBody = bodyString;
-    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-    localNotification.fireDate = [NSDate date];
+    UILocalNotification *googNotification = [[UILocalNotification alloc] init];
+    googNotification.alertBody = bodyString;
+    googNotification.timeZone = [NSTimeZone defaultTimeZone];
+    googNotification.fireDate = [NSDate date];
     UIApplication* app = [UIApplication sharedApplication];
-    [app scheduleLocalNotification:localNotification];
+    [app scheduleLocalNotification:googNotification];
 }
 
 @end
