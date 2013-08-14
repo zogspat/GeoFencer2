@@ -27,9 +27,11 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 
 {
-    bool bigChange;
+    bool bigChange; 
     CLLocationManager *locationManager ;
-    UILocalNotification *localNotification;
+    // Getting rid of this: multipe delegates trying to produce a notification are causing a
+    // NSInvalidArgumentException reason: 'data parameter is nil' error
+    // UILocalNotification *localNotification;
     CLRegion *dNaHouse;
     CLRegion *trainRegion;
     CLRegion *atHome;
